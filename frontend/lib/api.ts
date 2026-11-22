@@ -3,7 +3,14 @@
  * Connects Next.js frontend to Python FastAPI backend
  */
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// In production on Vercel, /api/* is rewritten to the backend service by vercel.json,
+// so we use a relative base (""). Locally, Next.js dev server proxies don't apply, so
+// we fall back to the FastAPI dev server at localhost:8000.
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ??
+  (typeof window !== "undefined" && window.location.hostname !== "localhost"
+    ? ""
+    : "http://localhost:8000");
 
 export interface ItemProfile {
   item_type: string;
